@@ -47,7 +47,7 @@ Sistema completo para descobrir, criar e gerenciar eventos próximos a você. Fa
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/SEU_USUARIO/360.git
+git clone https://github.com/pennapatrick/360.git
 cd 360
 ```
 
