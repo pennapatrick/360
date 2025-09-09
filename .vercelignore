@@ -1,0 +1,14 @@
+# Development files
+*.md
+TESTE-*.md
+BANCO-*.md
+CARDS-*.md
+INSTRUCOES.md
+SETUP.md
+
+# Local environment
+.env.local
+.env.example
+
+# Documentation
+docs/
