@@ -228,25 +228,33 @@ export async function DELETE(
       )
     }
 
-    // Verificar se há inscrições ativas
-    if (existingEvent._count.registrations > 0) {
-      return NextResponse.json(
-        { 
-          error: `Não é possível excluir o evento "${existingEvent.title}" pois há ${existingEvent._count.registrations} inscrição(ões) ativa(s)` 
-        },
-        { status: 400 }
-      )
-    }
-
-    // Soft delete - marcar como inativo
-    await prisma.event.update({
-      where: {
-        id: params.id
-      },
-      data: {
-        isActive: false,
-        updatedAt: new Date()
+    // Soft delete - marcar evento como inativo e cancelar todas as inscrições
+    await prisma.$transaction(async (tx) => {
+      // Primeiro, cancelar todas as inscrições do evento (alterar status para CANCELLED)
+      if (existingEvent._count.registrations > 0) {
+        await tx.eventRegistration.updateMany({
+          where: {
+            eventId: params.id,
+            status: {
+              in: ['PENDING', 'CONFIRMED']
+            }
+          },
+          data: {
+            status: 'CANCELLED'
+          }
+        })
       }
+
+      // Depois, marcar o evento como inativo
+      await tx.event.update({
+        where: {
+          id: params.id
+        },
+        data: {
+          isActive: false,
+          updatedAt: new Date()
+        }
+      })
     })
 
     return NextResponse.json({

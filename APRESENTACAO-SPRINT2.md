@@ -16,7 +16,6 @@
 **Critérios de Aceitação:**
 - ✅ Formulário de cadastro com todos os campos necessários
 - ✅ Validação de dados obrigatórios
-- ✅ Upload de imagem do evento
 - ✅ Definição de capacidade máxima
 - ✅ Data e horário configuráveis
 
@@ -29,7 +28,6 @@
 - ✅ Botão de inscrição visível em eventos disponíveis
 - ✅ Validação de capacidade máxima
 - ✅ Confirmação de inscrição
-- ✅ Atualização em tempo real do número de inscritos
 
 ### 3. Gerenciamento de Participantes
 **Como** organizador de evento  
@@ -40,7 +38,6 @@
 - ✅ Lista de participantes acessível apenas para o organizador
 - ✅ Informações dos usuários inscritos
 - ✅ Contagem total de participantes
-- ✅ Interface intuitiva e responsiva
 
 ### 4. Sistema de Filtros Avançados
 **Como** usuário da plataforma  
@@ -60,10 +57,8 @@
 **Para que** possa acessar facilmente diferentes funcionalidades  
 
 **Critérios de Aceitação:**
-- ✅ Header unificado em todas as páginas
 - ✅ Funcionalidade de logout acessível
 - ✅ Redirecionamento adequado após ações
-- ✅ Interface responsiva
 
 ---
 
@@ -107,21 +102,6 @@
 - 📱 Design responsivo para todas as telas
 - 🚀 Navegação fluida e intuitiva
 
----
-
-## 🔄 Fluxos de Usuário Implementados
-
-### Fluxo do Organizador
-1. **Login** → Página de eventos
-2. **Criar Evento** → Formulário de cadastro
-3. **Gerenciar** → Visualizar participantes
-4. **Editar/Excluir** → Modificar eventos existentes
-
-### Fluxo do Participante
-1. **Login** → Página de eventos
-2. **Filtrar** → Encontrar eventos de interesse
-3. **Inscrever** → Confirmar participação
-4. **Visualizar** → Status da inscrição
 
 ---
 
@@ -129,18 +109,17 @@
 
 ```
 Pontos de História Restantes:
-Dia 1: 34 pontos ████████████████████████████████████
-Dia 2: 27 pontos ███████████████████████████
-Dia 3: 18 pontos ██████████████████
-Dia 4: 12 pontos ████████████
-Dia 5:  5 pontos █████
-Dia 6:  0 pontos ✅ SPRINT CONCLUÍDA
-```
+Dia 1-2:    34 pontos ████████████████████████████████████
+Dia 3-6:    27 pontos ███████████████████████████
+Dia 7-9:    18 pontos ██████████████████
+Dia 10-11:  12 pontos ████████████
+Dia 12-14:  5 pontos  █████
+Dia 15:     0 pontos  ✅ SPRINT CONCLUÍDA
+
 
 **Velocity da Sprint:** 34 pontos  
 **Histórias Concluídas:** 5/5 (100%)  
-**Bugs Encontrados:** 3 (todos corrigidos)  
-**Tempo Total:** 6 dias úteis
+**Tempo Total:** 15 dias
 
 ---
 
@@ -148,16 +127,12 @@ Dia 6:  0 pontos ✅ SPRINT CONCLUÍDA
 
 ### Critérios Técnicos
 - ✅ Código desenvolvido e testado
-- ✅ Testes unitários implementados
 - ✅ Code review realizado
-- ✅ Deploy em ambiente de homologação
-- ✅ Documentação atualizada
+- ✅ Deploy
 
 ### Critérios de Qualidade
 - ✅ Interface responsiva funcionando
 - ✅ Acessibilidade básica implementada
-- ✅ Performance adequada (< 3s loading)
-- ✅ Compatibilidade cross-browser
 - ✅ Validações de segurança
 
 ---
