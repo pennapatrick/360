@@ -1,28 +1,11 @@
 import Link from 'next/link'
 import { Calendar, MapPin, Users } from 'lucide-react'
+import Header from '@/components/Header'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-blue-600">360°</h1>
-              <span className="ml-2 text-gray-600">Eventos</span>
-            </div>
-            <nav className="flex space-x-4">
-              <Link href="/auth/login" className="btn-secondary">
-                Entrar
-              </Link>
-              <Link href="/auth/register" className="btn-primary">
-                Cadastrar
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4">

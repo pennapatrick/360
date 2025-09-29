@@ -66,6 +66,25 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    async redirect({ url, baseUrl }) {
+      // Se for logout ou redirecionamento para login, permite
+      if (url.includes('/auth/login') || url.includes('signout')) {
+        return url
+      }
+      
+      // Redireciona para /events após login bem-sucedido (apenas da página inicial)
+      if (url === baseUrl) {
+        return baseUrl + '/events'
+      }
+      
+      // Permite redirecionamentos para URLs dentro do domínio
+      if (url.startsWith(baseUrl)) {
+        return url
+      }
+      
+      // Para URLs externas, redireciona para /events
+      return baseUrl + '/events'
+    },
   },
   pages: {
     signIn: '/auth/login',
