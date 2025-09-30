@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Search, ArrowLeft, CheckCircle, XCircle, Award, Calendar, MapPin, User } from 'lucide-react'
 import Link from 'next/link'
+import Header from '@/components/Header'
 
 interface CertificateValidation {
   valid: boolean
@@ -95,6 +96,7 @@ export default function ValidateCertificatePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center mb-8">
