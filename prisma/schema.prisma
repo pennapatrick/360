@@ -38,6 +38,9 @@ model User {
   // Inscrições em eventos (se for participante)
   registrations EventRegistration[]
 
+  // Certificados recebidos
+  certificates Certificate[]
+
   @@map("users")
 }
 
@@ -60,6 +63,9 @@ model Event {
   // Inscrições no evento
   registrations EventRegistration[]
 
+  // Certificados emitidos
+  certificates Certificate[]
+
   @@map("events")
 }
 
@@ -78,6 +84,28 @@ model EventRegistration {
 
   @@unique([userId, eventId])
   @@map("event_registrations")
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  certificateId String   @unique // Código único para validação
+  issueDate     DateTime @default(now())
+  pdfUrl        String?  // URL do PDF gerado
+  validationCode String  @unique // Código para validação pública
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Usuário que recebeu o certificado
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Evento do certificado
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Um certificado por usuário por evento
+  @@unique([userId, eventId])
+  @@map("certificates")
 }
 
 enum UserRole {

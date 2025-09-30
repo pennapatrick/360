@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import RegistrationButton from '@/components/RegistrationButton'
 import RegisteredUsers from '@/components/RegisteredUsers'
+import CertificateButton from '@/components/CertificateButton'
 import Header from '@/components/Header'
 import ProfileImage from '@/components/ProfileImage'
 
@@ -128,6 +129,7 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
 
   const isOrganizer = session?.user?.id === event?.organizer.id
   const hasStarted = event ? new Date(event.startDate) < new Date() : false
+  const hasEnded = event ? new Date(event.endDate || event.startDate) < new Date() : false
 
   const handleRegistrationChange = () => {
     // Refetch event data to update registration count
@@ -302,8 +304,8 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
               </Link>
             </div>
 
-            {/* Registration Section */}
-            <div className="border-t pt-8 mt-8">
+            {/* Registration & Certificate Section */}
+            <div className="border-t pt-8 mt-8 space-y-6">
               <RegistrationButton
                 eventId={event.id}
                 eventTitle={event.title}
@@ -313,6 +315,19 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
                 hasStarted={hasStarted}
                 onRegistrationChange={handleRegistrationChange}
               />
+              
+              {/* Certificate Button */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Certificado de Participação</h3>
+                <CertificateButton
+                  eventId={event.id}
+                  eventTitle={event.title}
+                  canGenerate={hasEnded}
+                  hasEnded={hasEnded}
+                  isRegistered={true} // Será ajustado quando integrarmos com status real
+                  registrationStatus="CONFIRMED" // Será ajustado quando integrarmos com status real
+                />
+              </div>
             </div>
           </div>
         </div>

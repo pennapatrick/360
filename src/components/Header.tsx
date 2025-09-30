@@ -51,6 +51,9 @@ export default function Header() {
                 <Link href="/user/registrations" className="btn-secondary">
                   Minhas Inscrições
                 </Link>
+                <Link href="/certificates" className="text-gray-600 hover:text-gray-900">
+                  Certificados
+                </Link>
                 {session.user?.role === 'ORGANIZER' && (
                   <Link href="/events/create" className="btn-primary flex items-center">
                     <Plus className="w-4 h-4 mr-2" />
