@@ -38,24 +38,33 @@ export async function GET(
       )
     }
 
-    // Buscar todas as inscrições do evento com dados do usuário
-    const registrations = await prisma.eventRegistration.findMany({
-      where: {
-        eventId: params.id
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        }
-      },
-      orderBy: {
-        registeredAt: 'asc'
+    // Buscar todas as inscrições do evento com dados do usuário usando raw query
+    const registrationsData = await prisma.$queryRaw`
+      SELECT 
+        er.id,
+        er.status,
+        er."registeredAt",
+        u.id as "userId",
+        u.name as "userName",
+        u.email as "userEmail",
+        u."profileImage" as "userProfileImage"
+      FROM event_registrations er
+      JOIN users u ON er."userId" = u.id
+      WHERE er."eventId" = ${params.id}
+      ORDER BY er."registeredAt" ASC
+    `
+
+    const registrations = (registrationsData as any[]).map(reg => ({
+      id: reg.id,
+      status: reg.status,
+      registeredAt: reg.registeredAt,
+      user: {
+        id: reg.userId,
+        name: reg.userName,
+        email: reg.userEmail,
+        profileImage: reg.userProfileImage
       }
-    })
+    }))
 
     return NextResponse.json(registrations)
 

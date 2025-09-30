@@ -19,36 +19,56 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const event = await prisma.event.findUnique({
-      where: {
-        id: params.id,
-        isActive: true
-      },
-      include: {
-        organizer: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        },
-        _count: {
-          select: {
-            registrations: true
-          }
-        }
-      }
-    })
+    const event = await prisma.$queryRaw`
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.location,
+        e."startDate",
+        e."endDate",
+        e."maxAttendees",
+        e."isActive",
+        u.id as "organizerId",
+        u.name as "organizerName",
+        u.email as "organizerEmail",
+        u."profileImage" as "organizerProfileImage",
+        (SELECT COUNT(*) FROM event_registrations er WHERE er."eventId" = e.id)::int as "registrationCount"
+      FROM events e
+      JOIN users u ON e."organizerId" = u.id
+      WHERE e.id = ${params.id} AND e."isActive" = true
+    `
 
-    if (!event) {
+    if (!event || (event as any).length === 0) {
       return NextResponse.json(
         { error: 'Evento não encontrado' },
         { status: 404 }
       )
     }
 
+    const eventData = (event as any)[0]
+    const formattedEvent = {
+      id: eventData.id,
+      title: eventData.title,
+      description: eventData.description,
+      location: eventData.location,
+      startDate: eventData.startDate,
+      endDate: eventData.endDate,
+      maxAttendees: eventData.maxAttendees,
+      isActive: eventData.isActive,
+      organizer: {
+        id: eventData.organizerId,
+        name: eventData.organizerName,
+        email: eventData.organizerEmail,
+        profileImage: eventData.organizerProfileImage
+      },
+      _count: {
+        registrations: eventData.registrationCount
+      }
+    }
+
     return NextResponse.json({
-      event,
+      event: formattedEvent,
       message: 'Evento encontrado com sucesso'
     })
   } catch (error) {
@@ -129,7 +149,7 @@ export async function PUT(
     }
 
     // Atualizar evento
-    const updatedEvent = await prisma.event.update({
+    await prisma.event.update({
       where: {
         id: params.id
       },
@@ -141,22 +161,50 @@ export async function PUT(
         endDate: validatedData.endDate ? new Date(validatedData.endDate) : null,
         maxAttendees: validatedData.maxAttendees,
         updatedAt: new Date()
-      },
-      include: {
-        organizer: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        },
-        _count: {
-          select: {
-            registrations: true
-          }
-        }
       }
     })
+
+    // Buscar evento atualizado com dados do organizador
+    const updatedEventData = await prisma.$queryRaw`
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.location,
+        e."startDate",
+        e."endDate",
+        e."maxAttendees",
+        e."isActive",
+        u.id as "organizerId",
+        u.name as "organizerName",
+        u.email as "organizerEmail",
+        u."profileImage" as "organizerProfileImage",
+        (SELECT COUNT(*) FROM event_registrations er WHERE er."eventId" = e.id)::int as "registrationCount"
+      FROM events e
+      JOIN users u ON e."organizerId" = u.id
+      WHERE e.id = ${params.id}
+    `
+
+    const eventData = (updatedEventData as any)[0]
+    const updatedEvent = {
+      id: eventData.id,
+      title: eventData.title,
+      description: eventData.description,
+      location: eventData.location,
+      startDate: eventData.startDate,
+      endDate: eventData.endDate,
+      maxAttendees: eventData.maxAttendees,
+      isActive: eventData.isActive,
+      organizer: {
+        id: eventData.organizerId,
+        name: eventData.organizerName,
+        email: eventData.organizerEmail,
+        profileImage: eventData.organizerProfileImage
+      },
+      _count: {
+        registrations: eventData.registrationCount
+      }
+    }
 
     return NextResponse.json({
       event: updatedEvent,

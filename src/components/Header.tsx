@@ -1,11 +1,32 @@
 'use client'
 
 import { useSession, signOut } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { LogOut, Plus } from 'lucide-react'
+import ProfileImage from './ProfileImage'
 
 export default function Header() {
   const { data: session } = useSession()
+  const [userProfile, setUserProfile] = useState<any>(null)
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchUserProfile()
+    }
+  }, [session])
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await fetch('/api/user/profile')
+      if (response.ok) {
+        const data = await response.json()
+        setUserProfile(data.user)
+      }
+    } catch (error) {
+      console.error('Erro ao carregar perfil do usuário:', error)
+    }
+  }
 
   const handleLogout = () => {
     signOut({ callbackUrl: '/auth/login' })
@@ -24,7 +45,6 @@ export default function Header() {
           <nav className="flex items-center space-x-4">
             {session ? (
               <div className="flex items-center space-x-4">
-                <span className="text-gray-700">Olá, {session.user?.name}</span>
                 <Link href="/events" className="text-gray-600 hover:text-gray-900">
                   Eventos
                 </Link>
@@ -37,6 +57,20 @@ export default function Header() {
                     Criar Evento
                   </Link>
                 )}
+                <Link 
+                  href={`/profile/${session.user?.id}`} 
+                  className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                  title="Meu Perfil"
+                >
+                  <ProfileImage
+                    src={userProfile?.profileImage}
+                    alt={session.user?.name || 'Perfil'}
+                    width={32}
+                    height={32}
+                    className="ring-2 ring-transparent hover:ring-blue-200 transition-all duration-200"
+                    fallbackInitials={session.user?.name?.split(' ').map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase() || 'U'}
+                  />
+                </Link>
                 <button 
                   onClick={handleLogout}
                   className="btn-secondary flex items-center"

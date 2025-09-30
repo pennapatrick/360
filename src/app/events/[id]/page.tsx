@@ -19,6 +19,7 @@ import {
 import RegistrationButton from '@/components/RegistrationButton'
 import RegisteredUsers from '@/components/RegisteredUsers'
 import Header from '@/components/Header'
+import ProfileImage from '@/components/ProfileImage'
 
 interface Event {
   id: string
@@ -33,6 +34,7 @@ interface Event {
     id: string
     name: string
     email: string
+    profileImage: string | null
   }
   _count: {
     registrations: number
@@ -274,15 +276,30 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
             {/* Organizer Info */}
             <div className="border-t pt-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Organizador</h2>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                  <User className="w-6 h-6 text-blue-600" />
+              <Link 
+                href={`/profile/${event.organizer.id}`}
+                className="flex items-center hover:bg-gray-50 p-3 rounded-lg transition-colors group"
+              >
+                <ProfileImage
+                  src={event.organizer.profileImage}
+                  alt={`Foto de ${event.organizer.name}`}
+                  width={48}
+                  height={48}
+                  className="mr-4 group-hover:ring-2 group-hover:ring-blue-300 transition-all"
+                  fallbackInitials={event.organizer.name.split(' ').map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase()}
+                />
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {event.organizer.name}
+                  </div>
+                  <div className="text-gray-600 text-sm">
+                    {event.organizer.email}
+                  </div>
+                  <div className="text-blue-500 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Ver perfil →
+                  </div>
                 </div>
-                <div>
-                  <div className="font-semibold text-gray-900">{event.organizer.name}</div>
-                  <div className="text-gray-600">{event.organizer.email}</div>
-                </div>
-              </div>
+              </Link>
             </div>
 
             {/* Registration Section */}

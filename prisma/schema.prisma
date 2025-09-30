@@ -19,6 +19,19 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Campos de perfil expandido
+  profileImage String?   // URL da foto de perfil
+  bannerImage  String?   // URL da imagem de banner do perfil
+  bio          String?   // Biografia do usuário (máx 500 caracteres)
+  location     String?   // Localização/cidade onde reside
+  phone        String?   // Número de telefone
+  website      String?   // Website pessoal
+  
+  // Redes sociais e contatos
+  linkedin     String?   // URL do LinkedIn
+  instagram    String?   // URL do Instagram
+  twitter      String?   // URL do Twitter
+
   // Eventos criados pelo usuário (se for organizador)
   createdEvents Event[]
 

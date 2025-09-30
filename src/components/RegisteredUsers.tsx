@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { Users, Mail, User, Calendar, ChevronDown, ChevronUp } from 'lucide-react'
+import Link from 'next/link'
+import ProfileImage from './ProfileImage'
 
 interface Registration {
   id: string
@@ -11,6 +13,7 @@ interface Registration {
     id: string
     name: string | null
     email: string
+    profileImage: string | null
   }
 }
 
@@ -159,19 +162,37 @@ export default function RegisteredUsers({ eventId, isOrganizer }: RegisteredUser
                 {registrations.map((registration) => (
                   <div
                     key={registration.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex items-center space-x-4">
-                      {/* Avatar */}
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <User className="w-5 h-5 text-blue-600" />
-                      </div>
+                      {/* Avatar clicável */}
+                      <Link 
+                        href={`/profile/${registration.user.id}`}
+                        className="shrink-0 hover:ring-2 hover:ring-blue-300 rounded-full transition-all"
+                      >
+                        <ProfileImage
+                          src={registration.user.profileImage}
+                          alt={`Foto de ${registration.user.name || 'Usuário'}`}
+                          width={48}
+                          height={48}
+                          fallbackInitials={
+                            registration.user.name 
+                              ? registration.user.name.split(' ').map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase()
+                              : 'U'
+                          }
+                        />
+                      </Link>
                       
                       {/* Informações do usuário */}
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          {registration.user.name || 'Nome não informado'}
-                        </h4>
+                      <div className="flex-1">
+                        <Link 
+                          href={`/profile/${registration.user.id}`}
+                          className="block hover:text-blue-600 transition-colors"
+                        >
+                          <h4 className="font-medium text-gray-900">
+                            {registration.user.name || 'Nome não informado'}
+                          </h4>
+                        </Link>
                         <div className="flex items-center text-sm text-gray-600">
                           <Mail className="w-4 h-4 mr-1" />
                           {registration.user.email}

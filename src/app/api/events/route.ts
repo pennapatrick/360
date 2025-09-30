@@ -15,18 +15,46 @@ const eventSchema = z.object({
 
 export async function GET() {
   try {
-    const events = await prisma.event.findMany({
-      where: { isActive: true },
-      include: {
-        organizer: {
-          select: { id: true, name: true, email: true }
-        },
-        _count: {
-          select: { registrations: true }
-        }
+    const eventsData = await prisma.$queryRaw`
+      SELECT 
+        e.id,
+        e.title,
+        e.description,
+        e.location,
+        e."startDate",
+        e."endDate",
+        e."maxAttendees",
+        e."isActive",
+        u.id as "organizerId",
+        u.name as "organizerName",
+        u.email as "organizerEmail",
+        u."profileImage" as "organizerProfileImage",
+        (SELECT COUNT(*) FROM event_registrations er WHERE er."eventId" = e.id)::int as "registrationCount"
+      FROM events e
+      JOIN users u ON e."organizerId" = u.id
+      WHERE e."isActive" = true
+      ORDER BY e."startDate" ASC
+    `
+
+    const events = (eventsData as any[]).map(eventData => ({
+      id: eventData.id,
+      title: eventData.title,
+      description: eventData.description,
+      location: eventData.location,
+      startDate: eventData.startDate,
+      endDate: eventData.endDate,
+      maxAttendees: eventData.maxAttendees,
+      isActive: eventData.isActive,
+      organizer: {
+        id: eventData.organizerId,
+        name: eventData.organizerName,
+        email: eventData.organizerEmail,
+        profileImage: eventData.organizerProfileImage
       },
-      orderBy: { startDate: 'asc' }
-    })
+      _count: {
+        registrations: eventData.registrationCount
+      }
+    }))
 
     return NextResponse.json({ events })
   } catch (error) {

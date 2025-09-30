@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Calendar, MapPin, User, Clock, Filter } from 'lucide-react'
 import Header from '@/components/Header'
+import ProfileImage from '@/components/ProfileImage'
 
 interface Event {
   id: string
@@ -15,7 +16,10 @@ interface Event {
   endDate: string | null
   maxAttendees: number | null
   organizer: {
+    id: string
     name: string
+    email: string
+    profileImage: string | null
   }
   _count?: {
     registrations: number
@@ -259,10 +263,21 @@ export default function EventsPageClient() {
                       <span>{event.location}</span>
                     </div>
                     
-                    <div className={`flex items-center ${expired ? 'text-gray-400' : 'text-secondary-600'}`}>
-                      <User className="w-4 h-4 mr-2" />
-                      <span>{event.organizer.name}</span>
-                    </div>
+                    <Link
+                      href={`/profile/${event.organizer.id}`}
+                      className={`flex items-center hover:bg-gray-100 p-2 rounded-lg transition-colors group ${expired ? 'text-gray-400' : 'text-secondary-600'}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ProfileImage
+                        src={event.organizer.profileImage}
+                        alt={`Foto de ${event.organizer.name}`}
+                        width={24}
+                        height={24}
+                        className="mr-2 group-hover:ring-2 group-hover:ring-blue-300 transition-all"
+                        fallbackInitials={event.organizer.name.split(' ').map(n => n.charAt(0)).join('').substring(0, 2).toUpperCase()}
+                      />
+                      <span className="group-hover:text-blue-600 transition-colors">{event.organizer.name}</span>
+                    </Link>
 
                     {event.maxAttendees && (
                       <div className={`flex items-center ${
