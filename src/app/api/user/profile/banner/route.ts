@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+// Força a rota a ser dinâmica
+export const dynamic = 'force-dynamic'
+
 // POST - Upload de banner de perfil (SEMPRE salva Base64 no banco Neon)
 export async function POST(request: NextRequest) {
   try {

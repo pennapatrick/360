@@ -15,6 +15,9 @@ const updateProfileSchema = z.object({
   twitter: z.string().url('URL do Twitter inválida').optional().nullable().or(z.literal(''))
 })
 
+// Força a rota a ser dinâmica
+export const dynamic = 'force-dynamic'
+
 // GET - Buscar perfil do usuário (próprio ou público)
 export async function GET(request: NextRequest) {
   try {

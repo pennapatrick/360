@@ -4,6 +4,9 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { validateImage, fileToBuffer, generateMockImageUrl, PROFILE_IMAGE_CONFIG } from '@/lib/utils/image'
 
+// Força a rota a ser dinâmica
+export const dynamic = 'force-dynamic'
+
 // POST - Upload de foto de perfil (SEMPRE salva Base64 no banco Neon)
 export async function POST(request: NextRequest) {
   try {

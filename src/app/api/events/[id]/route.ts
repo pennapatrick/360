@@ -4,6 +4,9 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 
+// Força a rota a ser dinâmica
+export const dynamic = 'force-dynamic'
+
 const updateEventSchema = z.object({
   title: z.string().min(1, 'Título é obrigatório'),
   description: z.string().nullable().optional(),
